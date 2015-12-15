@@ -10,33 +10,41 @@ public class Client
 		InetAddress ia;
 		InetSocketAddress isa;
 
-		client = new Socket();
-		try
+		if(args.length == 2)
 		{
-			ia = InetAddress.getLocalHost();
-			isa = new InetSocketAddress(ia, 9090);
-			client.connect(isa);
-			System.out.println("Porta " + client.getLocalPort());
-			System.out.println("Indirizzo " + client.getInetAddress() + " porta " + client.getPort());
-			//Thread.sleep(2 * 60 * 1000);
-
-			InputStreamReader keyboard = new InputStreamReader(System.in);
-			BufferedReader br = new BufferedReader(keyboard);
-			while(true)
+			client = new Socket();
+			try
 			{
-				String str = br.readLine();
-				OutputStream out = client.getOutputStream();
-				out.write(str.getBytes(), 0, str.length());
-				if(str.equals("close"))
+				ia = InetAddress.getByName(args[0]);
+				int port = Integer.parseInt(args[1]);
+				isa = new InetSocketAddress(ia, port);
+				client.connect(isa);
+				System.out.println("Porta " + client.getLocalPort());
+				System.out.println("Indirizzo " + client.getInetAddress() + " porta " + client.getPort());
+				//Thread.sleep(2 * 60 * 1000);
+	
+				InputStreamReader keyboard = new InputStreamReader(System.in);
+				BufferedReader br = new BufferedReader(keyboard);
+				while(true)
 				{
-					client.close();
-					break;
+					String str = br.readLine();
+					OutputStream out = client.getOutputStream();
+					out.write(str.getBytes(), 0, str.length());
+					if(str.equals("close"))
+					{
+						client.close();
+						break;
+					}
 				}
 			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
 		}
-		catch(Exception e)
+		else
 		{
-			e.printStackTrace();
+			System.out.println("usage: java Client [hostname] [port]");
 		}
 
 	}

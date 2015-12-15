@@ -9,23 +9,32 @@ public class Server
 		Socket client;
 		StringCount ss;
 		int numThread = 0;
-		try
+		
+		if(args.length == 1)
 		{
-			server = new ServerSocket(9090);
-			System.out.println(server.getInetAddress() + " " + server.getLocalPort());
-			ss = new StringCount();
-			while(true)
+			try
 			{
-				numThread++;
-				client = server.accept();
-				System.out.println(client.getInetAddress() + " " + client.getPort());
-				Thread t = new Service(client, numThread, ss);
-				t.start();
+				int port = Integer.parseInt(args[0]);
+				server = new ServerSocket(port);
+				System.out.println(server.getInetAddress() + " " + server.getLocalPort());
+				ss = new StringCount();
+				while(true)
+				{
+					numThread++;
+					client = server.accept();
+					System.out.println(client.getInetAddress() + " " + client.getPort());
+					Thread t = new Service(client, numThread, ss);
+					t.start();
+				}
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
 			}
 		}
-		catch(Exception e)
+		else
 		{
-			e.printStackTrace();
+			System.out.println("usage: java Server [port]");
 		}
 	}
 }
