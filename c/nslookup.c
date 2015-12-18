@@ -17,7 +17,8 @@
 	 u_long address;
 	 if(argc != 3)
 	 {
-		 printf("Error: number of parameters incorrect\n");
+		 printf("usage: %s s [www.example.com]\n", argv[0]);
+		 printf("usage: %s d [192.168.1.4]\n", argv[0]);
 		 return 1;
 	 }
 	 else if(strcmp(argv[1], "s") == 0)
@@ -32,7 +33,8 @@
 		 }
 		 struct in_addr castDot;
 		 castDot.s_addr = *((u_long *) (hostinfo->h_addr_list[0]));
-		 printf("address: %u\n", castDot.s_addr);
+		 printf("address (32 bit): %u\n", castDot.s_addr);
+		 printf("ip: %s\n", inet_ntoa(castDot));
 	 }
 	 else if(strcmp(argv[1], "d") == 0)
 	 {
@@ -43,12 +45,6 @@
 			 return 3;
 		 }
 		 printf("address: %lu\n", address);
-	 }
-	 else
-	 {
-		 printf("usage: %s s [www.example.com]\n", argv[0]);
-		 printf("usage: %s d [192.168.1.4]\n", argv[0]);
-		 return 4;
 	 }
 	 return 0;
  }
