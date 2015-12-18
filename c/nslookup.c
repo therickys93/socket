@@ -36,7 +36,7 @@
 	 }
 	 else if(strcmp(argv[1], "d") == 0)
 	 {
-		 address = inet_addr(argv[1]);
+		 address = inet_addr(argv[2]);
 		 if(address == INADDR_NONE)
 		 {
 			 printf("Error: inet_address\n");
