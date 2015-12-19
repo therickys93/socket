@@ -12,7 +12,8 @@ diffieHellmanKeyExchange -> a simple diffie hellman key exchange example <br />
 <br />
 Contents in this repository (c part): <br />
 
-simple nslookup clone
+simple nslookup clone <br />
+Added the scan of the standard ports 
 
 <br />
 This code is in development so there could be some errors or bugs
