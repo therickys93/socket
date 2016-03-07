@@ -37,7 +37,7 @@ public class Service extends Thread
 				{
                     OutputStream output = this.s.getOutputStream();
                     String toClient = "number: "+total;
-                    output.write(toClient, 0, toClient.length());
+                    output.write(toClient.getBytes(), 0, toClient.length());
 					System.out.println(s);
 				}
 			}
