@@ -9,7 +9,7 @@ public class Client
 		InetAddress ia;
 		InetSocketAddress isa;
 		
-		if(args.lenght == 2)
+		if(args.length == 2)
 		{
 			s = new Socket();
 			try
