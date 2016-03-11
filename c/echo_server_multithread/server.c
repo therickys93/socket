@@ -79,14 +79,12 @@ int main(int argc, char **argv)
 	int socket_dati;
 	while(1)
 	{
-		printf("New connection\n");
 		socket_dati = accept(s,(struct sockaddr *) &chiamante, &dim_chiamante);
 		if(fork() == 0)
 		{
 			erogazione_servizio(socket_dati);
 			return 0;
 		}
-		printf("Close connection\n");
 		close(socket_dati);
 	}
 	return 0;
