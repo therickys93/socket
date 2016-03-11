@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <sys/select.h>
 
 int erogazione_servizio(int socket)
 {
@@ -64,16 +65,38 @@ int main(int argc, char **argv)
 	struct sockaddr_in chiamante;
 	unsigned int dim_chiamante = sizeof(chiamante);
 	int socket_dati;
+	fd_set lettura, parametro;
+	int fd, r;
+	FD_ZERO(&lettura);
+	FD_SET(s, &lettura);
 	while(1)
 	{
-		socket_dati = accept(s, (struct sockaddr *) &chiamante, &dim_chiamante);
-		printf("new connection\n");
-		if(erogazione_servizio(socket_dati) < 0)
+		memcpy(&parametro, &lettura, sizeof(fd_set));
+		if(select(FOPEN_MAX, &parametro, NULL, NULL, NULL) < 0)
 		{
+			perror("select");
 			return -1;
 		}
-		printf("close connection\n");
-		close(socket_dati);
+		if(FD_ISSET(s, &parametro))
+		{
+			printf("open connection\n");
+			socket_dati = accept(s, (struct sockaddr *)&chiamante, &dim_chiamante);
+			FD_SET(socket_dati, &lettura);
+			FD_CLR(s, &parametro);
+		}
+		for (fd = 0; fd < FOPEN_MAX; fd += 1)
+		{
+			if(FD_ISSET(fd, &parametro))
+			{
+				r = erogazione_servizio(fd);
+				if(r <= 0)
+				{
+					printf("close connection\n");
+					close(fd);
+					FD_CLR(fd, &lettura);
+				}
+			}
+		}
 	}
 	return 0;
 }
