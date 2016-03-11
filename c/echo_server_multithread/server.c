@@ -4,6 +4,10 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/socket.h>
+#include <signal.h>
+#include <sys/wait.h>
+
+typedef void (* manager) (int);
 
 int erogazione_servizio(int socket)
 {
@@ -30,8 +34,17 @@ int erogazione_servizio(int socket)
 	}
 }
 
+void gestione_processo(int segnale)
+{
+	int status;
+	while(wait(&status) >= 0);
+	signal(SIGCHLD, (manager)gestione_processo);
+}
+
 int main(int argc, char **argv)
 {
+	signal(SIGCHLD, (manager)gestione_processo);
+
 	if(argc != 2)
 	{
 		printf("usage: %s [port]\n", argv[0]);
@@ -66,13 +79,14 @@ int main(int argc, char **argv)
 	int socket_dati;
 	while(1)
 	{
-		socket_dati = accept(s, (struct sockaddr *) &chiamante, &dim_chiamante);
-		printf("new connection\n");
-		if(erogazione_servizio(socket_dati) < 0)
+		printf("New connection\n");
+		socket_dati = accept(s,(struct sockaddr *) &chiamante, &dim_chiamante);
+		if(fork() == 0)
 		{
-			return -1;
+			erogazione_servizio(socket_dati);
+			return 0;
 		}
-		printf("close connection\n");
+		printf("Close connection\n");
 		close(socket_dati);
 	}
 	return 0;
