@@ -25,19 +25,23 @@ public class Service extends Thread
 			{
 				InputStream input = this.s.getInputStream();
 				int letti = input.read(buffer);
-				String s = new String(buffer, 0, letti);
+				String str = new String(buffer, 0, letti);
 				total++;
-				if(s.equals("close"))
+				if(str.equals("close"))
 				{
-					this.s.close();
-					System.out.println("total: "+this.ss.increment(total));
+                    String toClient = "total: "+this.ss.increment(total);
+					System.out.println(toClient);
+                    OutputStream output = this.s.getOutputStream();
+                    output.write(toClient.getBytes(), 0, toClient.length());
+                    this.s.close();
 					return;
 				}
 				else
 				{
+                    String toClient = "total: "+this.ss.increment(total);
+					System.out.println(toClient);
                     OutputStream output = this.s.getOutputStream();
-                    String toClient = "number: "+total;
-                    output.write(toClient.getBytes(), 0, toClient.length());
+                    output.write(str.getBytes(), 0, str.length());
 					System.out.println(s);
 				}
 			}
