@@ -23,7 +23,7 @@
             {
                 client = new DatagramSocket();
                 System.out.println(client.getLocalAddress()+" "+client.getLocalPort());
-                InetSocketAddress isa = new InetSocketAddress("localhost", port);
+                InetSocketAddress isa = new InetSocketAddress(host, port);
                 InputStreamReader isr = new InputStreamReader(System.in);
                 BufferedReader br = new BufferedReader(isr);
                 String sentence = br.readLine();
