@@ -1,4 +1,4 @@
-# socket
+# socket-university
 Socket made in java and in c.
 
 I made this code in university
